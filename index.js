@@ -3,7 +3,7 @@ const usuarios = require("./schemas/usermodel");
 const books = require("./schemas/bookmodel");
 const cart = require ("./schemas/cartmodel");
 const app = express.Router();
-
+const jwt = require('jsonwebtoken');
 //variables de sesiones
 
 
@@ -82,23 +82,24 @@ app.post("/signup", async (req, res) => {
 //iniciar sesion
 app.post('/validar', async (req,res) => {
   const{user, 
-    contra} = req.body;
+    password} = req.body;
   const usuario = await usuarios.findOne({user});
-  const password = await usuarios.findOne({contra});
+  const passwordValidation = await usuarios.findOne({contra:password});
   const admin = await usuarios.findOne({'user': 'admin'});
 
   if(!usuario){
-    res.send("Usuario inexistente");
+      res.status(422).send("No existe el usuario")
   }else{
-    if(!password){
-      res.send("Password incorrecto");
+    if(!passwordValidation){
+      res.status(422).send("Password or user are incorrect")
     }
     else{
       if(usuario.user == admin.user){
-        req.session.idUsuario = usuario.user;
-        res.send("Bienvenido admin");
+        const token = jwt.sign({ userId: usuario._id }, 'MY_SECRET_KEY');
+        res.send({token});
       }else{
-        res.send("Bienvenido");
+        const token = jwt.sign({ userId: usuario._id }, 'MY_SECRET_KEY');
+        res.send({token});
       }
     }
   }
@@ -140,15 +141,14 @@ if(!book){
   });
   try {
     await book.save();
-    res.redirect('/agregar');
-    console.log("Libro agregado");
+    res.send("Libro agregado");
   
   } catch (error) {
     console.log(error);
   }
   
 }else{
-  res.redirect('/agregar');
+  
   console.log("Libro ya existente");
 }
 });

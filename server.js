@@ -8,7 +8,10 @@ const app = express();
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(bodyParser.json());
+var cors = require('cors');
 
+// use it before all route definitions
+app.use(cors({origin: '*'}));
 //conexión con mongodb
 mongoose.connect('mongodb+srv://demo:admin123@cluster0.8y2sb.mongodb.net/book2up?retryWrites=true&w=majority',{useNewUrlParser: true,  useUnifiedTopology: true})
     .then(db => console.log('Connected to database'))
@@ -16,6 +19,6 @@ mongoose.connect('mongodb+srv://demo:admin123@cluster0.8y2sb.mongodb.net/book2up
 
 app.use(index);
 
-app.listen(3000, () => {
+app.listen(4000, () => {
     console.log("El servidor está corriendo");
 });

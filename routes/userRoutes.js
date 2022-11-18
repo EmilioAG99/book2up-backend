@@ -2,6 +2,7 @@ const express = require("express");
 const cart = require ("../schemas/cartmodel");
 const router = express.Router();
 const requireAuth = require("../middleware/requireAuth");
+const books = require("../schemas/bookmodel");
 router.use(requireAuth);
 //Informacion de incio de sesion
 
@@ -13,6 +14,10 @@ router.get("/cartdata", async (req, res) => {
     res.send([]);
   }
 });
+//Agregar multiples elementos por medio de un csv
+router.post('/addcsv', async (req, res) => {
+  console.log(req.body);
+})
 
 //agregar libros
 router.post("/agregar", async (req, res) => {
@@ -32,11 +37,21 @@ router.post("/agregar", async (req, res) => {
       await book.save();
       res.send("Libro agregado");
     } catch (error) {
-      console.log(error);
+      res.status(200).send("Libro ya existente");
     }
   } else {
-    console.log("Libro ya existente");
+    res.status(200).send("Libro ya existente");
   }
+});
+
+router.post("/agregar-csv", async (req, res) => {
+  const libros= req.body;
+  await books.collection.insertMany(libros).then(function(){
+        res.send("Insertados")
+    }).catch(function(error){
+      res.status(400).send(error)   // Failure
+    });
+  
 });
 
 //agregar carrito

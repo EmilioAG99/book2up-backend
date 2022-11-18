@@ -79,26 +79,45 @@ app.post('/validar', async (req,res) => {
     password} = req.body;
   const usuario = await usuarios.findOne({user});
   const passwordValidation = await usuarios.findOne({contra:password});
+
+  if(!usuario){
+      res.status(422).send("No existe el usuario")
+  }else{
+    if(!passwordValidation){
+      res.status(422).send("Password or user is incorrect")
+    }
+    else{
+        const token = jwt.sign({ userId: usuario._id }, 'MY_SECRET_KEY');
+        res.send({token});
+      }
+    }
+  }
+)
+
+app.post('/validarAdmin', async (req,res) => {
+  const{user, 
+    password} = req.body;
+  const usuario = await usuarios.findOne({user});
+  const passwordValidation = await usuarios.findOne({contra:password});
   const admin = await usuarios.findOne({'user': 'admin'});
 
   if(!usuario){
       res.status(422).send("No existe el usuario")
   }else{
     if(!passwordValidation){
-      res.status(422).send("Password or user are incorrect")
+      res.status(422).send("Password or user is incorrect")
     }
     else{
       if(usuario.user == admin.user){
         const token = jwt.sign({ userId: usuario._id }, 'MY_SECRET_KEY');
         res.send({token});
-      }else{
-        const token = jwt.sign({ userId: usuario._id }, 'MY_SECRET_KEY');
-        res.send({token});
+      }
+      else{
+        res.status(422).send("No corresponde al administrador")
       }
     }
   }
 })
-
 
 //cerrar sesion --- cambiar con sesion
 app.post('/logout',async(req, res) =>{

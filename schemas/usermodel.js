@@ -56,8 +56,8 @@ const userSchema = new Schema ({
     cvv:{
         type: String,
         required: true
-    }
-    
+    },
+  
 });
 
 

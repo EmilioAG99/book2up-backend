@@ -14,10 +14,6 @@ router.get("/cartdata", async (req, res) => {
     res.send([]);
   }
 });
-//Agregar multiples elementos por medio de un csv
-router.post('/addcsv', async (req, res) => {
-  console.log(req.body);
-})
 
 //agregar libros
 router.post("/agregar", async (req, res) => {

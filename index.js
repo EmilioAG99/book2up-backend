@@ -27,45 +27,23 @@ res.send('/a-carrito');
 app.post("/signup", async (req, res) => {
     const{
       nombre,
-      apellidos,
-      mail,
       user,
-      contra,
-      codigo_postal,
-      pais,
-      estado,
-      municipio,
-      colonia,
-      tarjeta,
-      expiryMonth,
-      expiryYear,
-      cvv
+      password,
     } = req.body;
-    
   let usuario = await usuarios.findOne({user});
   if(!usuario){
     usuario = new usuarios({
       nombre,
-      apellidos,
-      mail,
       user,
-      contra,
-      codigo_postal,
-      pais,
-      estado,
-      municipio,
-      colonia,
-      tarjeta,
-      expiryMonth,
-      expiryYear,
-      cvv
+      contra:password,
     });
     try {
       await usuario.save();
-      res.send("Usuario creado");
+      const token = jwt.sign({ userId: usuario._id }, 'MY_SECRET_KEY');
+      res.send({token});
     
     } catch (error) {
-      res.error(error);
+      res.status(404).send(error);
     }
     
   }else{
@@ -119,16 +97,6 @@ app.post('/validarAdmin', async (req,res) => {
   }
 })
 
-//cerrar sesion --- cambiar con sesion
-app.post('/logout',async(req, res) =>{
-  req.session.destroy(err => {
-    if(err){
-      return res.redirect('/libros');
-    }
-    res.clearCookie('sid');
-    res.redirect('/');
-    console.log("La sesion se ha cerrado");
-  })
-})
+
 app.use(userRoutes);
 module.exports = app;

@@ -24,6 +24,10 @@ const bookSchema = new Schema ({
     img:{
         type: String,
         required: true
+    },
+    disponibles:{
+        type:Number,
+        required: true
     }
 });
 

@@ -12,17 +12,6 @@ app.get('/bookdata', async (req, res) => {
   res.send(info);
 })
 
-// desplegar carrito en la pagina
-
-
-// obtener info de libros --- ver para que sirve
-app.post('/infoLibros', (req,res) => {
-codigo = req.body.SKU;
-nombre = req.body.titulo;
-money = req.body.precio;
-res.send('/a-carrito');
-})
-
 //registro
 app.post("/signup", async (req, res) => {
     const{

@@ -17,7 +17,7 @@ router.get("/cartdata", async (req, res) => {
 
 //agregar libros
 router.post("/agregar", async (req, res) => {
-  const { titulo, autor, sin, precio, SKU, img,disponible } = req.body;
+  const { titulo, autor, sin, precio, SKU, img, disponible } = req.body;
 
   let book = await books.findOne({ SKU });
   if (!book) {
@@ -28,7 +28,7 @@ router.post("/agregar", async (req, res) => {
       precio,
       SKU,
       img,
-      disponibles:disponible
+      disponibles: disponible,
     });
     try {
       await book.save();
@@ -40,7 +40,40 @@ router.post("/agregar", async (req, res) => {
     res.status(200).send("Libro ya existente");
   }
 });
+//
+//actualizar stock
+router.post("/update-book", async (req, res) => {
+  const { SKU, cantidad } = req.body;
+  let libro = await books.findOne({ SKU });
+  if (!libro) {
+    res.send("No se encontro el libro");
+  } else {
+    try{
+      libro.disponibles = cantidad;
+      await libro.save()
+      res.send("Se actualizo tu libro")
+    }catch(e){
+      res.send(e)
+    }
+  }
+});
+//actualizar stock
+router.post("/delete-book", async (req, res) => {
+  const {SKU} = req.body;
+  let libro = await books.findOne({ SKU });
+  if (!libro) {
+    res.send("No se encontro el libro");
+  } else {
+    try{
+      await libro.deleteOne({ _id: libro._id });
+      res.send("Se elimino con exito")
+    }catch(e){
+      res.send(e)
+    }
+  }
+});
 
+//
 router.post("/agregar-csv", async (req, res) => {
   const libros = req.body;
   await books.collection
@@ -81,14 +114,12 @@ router.post("/purchase", async (req, res) => {
   }
 });
 
-
 router.get("/purchase-history", async (req, res) => {
   const currentuser = req.user.user;
   let userCart = await cart.findOne({ username: currentuser });
-  if(!userCart){
-    res.send([])
-  }
-  else{
+  if (!userCart) {
+    res.send([]);
+  } else {
     res.send(userCart.compras);
   }
 });

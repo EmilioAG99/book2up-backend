@@ -17,7 +17,7 @@ router.get("/cartdata", async (req, res) => {
 
 //agregar libros
 router.post("/agregar", async (req, res) => {
-  const { titulo, autor, sin, precio, SKU, img } = req.body;
+  const { titulo, autor, sin, precio, SKU, img,disponible } = req.body;
 
   let book = await books.findOne({ SKU });
   if (!book) {
@@ -28,6 +28,7 @@ router.post("/agregar", async (req, res) => {
       precio,
       SKU,
       img,
+      disponibles:disponible
     });
     try {
       await book.save();

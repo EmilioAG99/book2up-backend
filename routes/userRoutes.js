@@ -2,7 +2,7 @@ const express = require("express");
 const cart = require("../schemas/cartmodel");
 const router = express.Router();
 const requireAuth = require("../middleware/requireAuth");
-const books = require("../schemas/bookmodel");
+const books = require("../schemas/newbookmodel");
 router.use(requireAuth);
 //Informacion de incio de sesion
 
@@ -48,27 +48,27 @@ router.post("/update-book", async (req, res) => {
   if (!libro) {
     res.send("No se encontro el libro");
   } else {
-    try{
+    try {
       libro.disponibles = cantidad;
-      await libro.save()
-      res.send("Se actualizo tu libro")
-    }catch(e){
-      res.send(e)
+      await libro.save();
+      res.send("Se actualizo tu libro");
+    } catch (e) {
+      res.send(e);
     }
   }
 });
 //actualizar stock
 router.post("/delete-book", async (req, res) => {
-  const {SKU} = req.body;
+  const { SKU } = req.body;
   let libro = await books.findOne({ SKU });
   if (!libro) {
     res.send("No se encontro el libro");
   } else {
-    try{
+    try {
       await libro.deleteOne({ _id: libro._id });
-      res.send("Se elimino con exito")
-    }catch(e){
-      res.send(e)
+      res.send("Se elimino con exito");
+    } catch (e) {
+      res.send(e);
     }
   }
 });

@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const bookSchema = new Schema({
+const booksSchema = new Schema({
   titulo: {
     type: String,
     required: true,
@@ -29,6 +29,26 @@ const bookSchema = new Schema({
     type: Number,
     required: false,
   },
+  num_pages: {
+    type: String,
+    required: false,
+  },
+  rating: {
+    type: String,
+    required: false,
+  },
+  count_rating: {
+    type: String,
+    required: false,
+  },
+  genre: {
+    type: String,
+    required: false,
+  },
+  year: {
+    type: String,
+    required: false,
+  },
 });
 
-module.exports = model("books", bookSchema);
+module.exports = model("newbooks", booksSchema);

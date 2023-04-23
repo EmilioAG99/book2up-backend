@@ -1,6 +1,6 @@
 const express = require("express");
 const usuarios = require("./schemas/usermodel");
-const books = require("./schemas/bookmodel");
+const books = require("./schemas/newbookmodel");
 
 const app = express.Router();
 const jwt = require("jsonwebtoken");
